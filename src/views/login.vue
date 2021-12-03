@@ -3,12 +3,12 @@
     <transition>
       <section class="form_contianer">
         <div class="manage_tip">
-          <p>IPtv后台管理系统</p>
+          <p>COS工单查询系统</p>
         </div>
         <el-form :model="loginForm" :rules="formRules" ref="loginForm">
-          <el-form-item prop="username">
+          <el-form-item prop="account">
             <el-input
-              v-model="loginForm.username"
+              v-model="loginForm.account"
               placeholder="用户名"
             ></el-input>
           </el-form-item>
@@ -17,27 +17,31 @@
               :type="passwordType"
               placeholder="密码"
               v-model="loginForm.password"
-               auto-complete="off"
+              auto-complete="off"
             >
-            <i class="el-icon-view el-input__icon" slot="suffix" @click="showPassword"></i>
+              <i
+                class="el-icon-view el-input__icon"
+                slot="suffix"
+                @click="showPassword"
+              ></i>
             </el-input>
           </el-form-item>
           <el-form-item prop="code">
             <el-row :span="24">
               <el-col :span="12">
-            <el-input
-            auto-complete="off"
-            size=""
-              placeholder="请输入验证码"
-              v-model="loginForm.code"
-               @keyup.enter.native="submitForm('loginForm')"
-            ></el-input>
+                <el-input
+                  auto-complete="off"
+                  size=""
+                  placeholder="请输入验证码"
+                  v-model="loginForm.vcode"
+                  @keyup.enter.native="submitForm('loginForm')"
+                ></el-input>
               </el-col>
               <el-col :span="12">
                 <div class="login-code" @click="refreshCode">
-                        <!--验证码组件-->
-                        <Sidentify :identifyCode="identifyCode"></Sidentify>
-                    </div>
+                  <!--验证码组件-->
+                  <Sidentify :identifyCode="identifyCode"></Sidentify>
+                </div>
               </el-col>
             </el-row>
           </el-form-item>
@@ -49,28 +53,30 @@
             >登录</el-button
           >
         </el-form>
-    
       </section>
     </transition>
   </div>
 </template>
 
 <script >
-import { login } from "@/api/user";
-import Sidentify from "@/components/Sidentify.vue"
+import { login,vcode} from "@/api/user";
+import Sidentify from "@/components/Sidentify.vue";
 export default {
   name: "Login",
-  components:{Sidentify},
+  components: { Sidentify },
   data() {
     return {
       loginForm: {
-        username: "",
+        account: "",
         password: "",
-        code:""
+        vcode: "",
+        validtoken: "",
       },
       loginLoading: false,
-      identifyCode: '1234',
-      passwordType: 'password',
+      identifyCode: "",
+      identifyCodes: "123",
+      passwordType: "password",
+      isDebugLogin: false,
       formRules: {
         username: [
           { required: true, message: "请输入用户名", trigger: "change" },
@@ -82,33 +88,44 @@ export default {
           },
         ],
         password: [
-          { required: true, message: "请输入正确用户名", trigger: "change" },
+          { required: true, message: "请输入正确密码", trigger: "change" },
         ],
       },
     };
   },
+  watch: {
+    isDebugLogin(v) {
+      if (v) {
+        this.loginForm.password = "123";
+        this.refreshCode();
+      }
+    },
+    identifyCode(v) {
+      this.isDebugLogin && (this.loginForm.code = v);
+    },
+  },
   methods: {
     //验证码的函数
     randomNum(min, max) {
-            return Math.floor(Math.random() * (max - min) + min)
-        },
-     refreshCode() {
-            this.identifyCode = ''
-            this.makeCode(this.identifyCodes, 4)
-        },
-    makeCode(o,l){
-        for(let i=0;i<l;i++){
-          this.identifyCode +=this.identifyCode[
-            this.randomNum(0,this.identifyCode.length)
-          ]
-        }
-        },
-
-    showPassword(){
-      this.passwordType === ''
-                ? (this.passwordType = 'password')
-                : (this.passwordType = '')
+      return Math.floor(Math.random() * (max - min) + min);
     },
+    refreshCode() {
+      this.identifyCode = "";
+      this.makeCode(this.identifyCodes, 4);
+    },
+    makeCode(o, l) {
+      for (let i = 0; i < l; i++) {
+        this.identifyCode +=
+          this.identifyCodes[this.randomNum(0, this.identifyCodes.length)];
+      }
+    },
+
+    showPassword() {
+      this.passwordType === ""
+        ? (this.passwordType = "password")
+        : (this.passwordType = "");
+    },
+
     onLogin() {
       //获取表单数据
       const loginForm = this.loginForm;
@@ -119,14 +136,14 @@ export default {
         }
       });
       //通过验证，提交登录
-      this.login()
+      this.login();
       //处理后的结果
       //   成功
       //   失败
     },
     login() {
       this.loginLoading = true;
-
+      console.log(this.loginForm)
       //验证
       login(this.loginForm)
         .then((res) => {
@@ -138,6 +155,16 @@ export default {
           this.loginLoading = false;
         });
     },
+    x(){
+      vcode().then((res)=>{
+        console.log("res")
+        console.log(res)
+        })
+    }
+  },
+  created() {
+    this.refreshCode();
+    this.x();
   },
 };
 </script>

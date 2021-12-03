@@ -29,7 +29,7 @@
 
 <script>
 
-import SIdentify from '@/components/Sidentify2.vue'
+import SIdentify from '@/components/Sidentify2'
 export default {
     name: 'userLogin',
     components: { SIdentify },
@@ -42,10 +42,8 @@ export default {
             } else {
                 callback()
             }
-        }
-        var isLoginName=()=>{
-           
         };
+         const isLoginName=()=>{};
         return {
             isDebugLogin: false,
             loginForm: {
@@ -158,4 +156,4 @@ export default {
         border: 0;
     }
 }
-</style
+</style>

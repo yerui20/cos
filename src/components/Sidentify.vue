@@ -98,8 +98,7 @@ export default {
     },
     drawText(ctx, txt, i) {
       ctx.fillStyle = this.randomColor(this.colorMin, this.colorMax);
-      ctx.font =
-        this.randomNum(this.fontSizeMin, this.fontSizeMax) + "px SimHei";
+      ctx.font = this.randomNum(this.fontSizeMin, this.fontSizeMax) + "px SimHei";
       let x = (i + 1) * (this.contentWidth / (this.identifyCode.length + 1));
       let y = this.randomNum(this.fontSizeMax, this.contentHeight - 5);
       var deg = this.randomNum(-45, 45);
@@ -137,11 +136,7 @@ export default {
         ctx.beginPath();
         ctx.arc(
           this.randomNum(0, this.contentWidth),
-          this.randomNum(0, this.contentHeight),
-          1,
-          0,
-          2 * Math.PI
-        );
+          this.randomNum(0, this.contentHeight), 1, 0, 2 * Math.PI );
         ctx.fill();
       }
     },
