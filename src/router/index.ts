@@ -38,6 +38,7 @@ const routes: Array<RouteConfig> = [
     name: 'login',
     component: Login
   },
+  
   {
     path: '/table',
     name: 'table',

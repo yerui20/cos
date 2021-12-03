@@ -14,20 +14,41 @@
           </el-form-item>
           <el-form-item prop="password">
             <el-input
-              type="password"
+              :type="passwordType"
               placeholder="密码"
               v-model="loginForm.password"
+               auto-complete="off"
+            >
+            <i class="el-icon-view el-input__icon" slot="suffix" @click="showPassword"></i>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="code">
+            <el-row :span="24">
+              <el-col :span="12">
+            <el-input
+            auto-complete="off"
+            size=""
+              placeholder="请输入验证码"
+              v-model="loginForm.code"
+               @keyup.enter.native="submitForm('loginForm')"
             ></el-input>
+              </el-col>
+              <el-col :span="12">
+                <div class="login-code" @click="refreshCode">
+                        <!--验证码组件-->
+                        <Sidentify :identifyCode="identifyCode"></Sidentify>
+                    </div>
+              </el-col>
+            </el-row>
           </el-form-item>
           <el-button
             type="primary"
             @click="onLogin('loginForm')"
             class="submit_btn"
             :loading="loginLoading"
-            >提交</el-button
+            >登录</el-button
           >
         </el-form>
-        <p class="tips">温馨提示</p>
     
       </section>
     </transition>
@@ -36,15 +57,20 @@
 
 <script >
 import { login } from "@/api/user";
+import Sidentify from "@/components/Sidentify.vue"
 export default {
   name: "Login",
+  components:{Sidentify},
   data() {
     return {
       loginForm: {
         username: "",
         password: "",
+        code:""
       },
       loginLoading: false,
+      identifyCode: '1234',
+      passwordType: 'password',
       formRules: {
         username: [
           { required: true, message: "请输入用户名", trigger: "change" },
@@ -62,6 +88,27 @@ export default {
     };
   },
   methods: {
+    //验证码的函数
+    randomNum(min, max) {
+            return Math.floor(Math.random() * (max - min) + min)
+        },
+     refreshCode() {
+            this.identifyCode = ''
+            this.makeCode(this.identifyCodes, 4)
+        },
+    makeCode(o,l){
+        for(let i=0;i<l;i++){
+          this.identifyCode +=this.identifyCode[
+            this.randomNum(0,this.identifyCode.length)
+          ]
+        }
+        },
+
+    showPassword(){
+      this.passwordType === ''
+                ? (this.passwordType = 'password')
+                : (this.passwordType = '')
+    },
     onLogin() {
       //获取表单数据
       const loginForm = this.loginForm;
