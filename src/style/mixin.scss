@@ -1,0 +1,13 @@
+
+//定位上下左右居中
+@mixin middle($height, $width) {
+    position: absolute;
+	top: 50%;
+    left: 50%;
+    margin-top: -$height/2;
+    margin-left: -$width/2;
+  }
+@mixin wh ($height, $width){
+        width: $width;
+        height: $height;  
+}
