@@ -39,8 +39,8 @@
               </el-col>
               <el-col :span="12">
                 <div class="login-code" @click="refreshCode">
-                  <img :src="info" />
-                  {{info}}
+                  <img  :src="codeSrc" />
+                  <img :src=" 'data:image/png;base64,'+codeSrc ">
                   <!--验证码组件-->
                   <!--<Sidentify :identifyCode="identifyCode"></Sidentify> -->
                 </div>
@@ -74,12 +74,9 @@ export default {
         password: "",
         vcode: "",
         validtoken: "",
-        yzmcode: "",
+        
       },
-
        codeSrc: "",
-       info:"",
-
       loginLoading: false,
       identifyCode: "",
       identifyCodes: "123",
@@ -128,17 +125,6 @@ export default {
       }
     },
 
-    cover() {
-      vcode()
-        .then((res) => {
-          this.codeSrc = res;
-        })
-        .catch(function (error) {
-          // 请求失败处理
-          console.log(error);
-        });
-    },
-
     showPassword() {
       this.passwordType === ""
         ? (this.passwordType = "password")
@@ -176,8 +162,9 @@ export default {
     },
     x() {
       vcode().then((res) => {
-        console.log("res");
-        console.log(res);
+       this.codeSrc=res.data
+       console.log(res)
+       
       });
     },
   },
@@ -186,15 +173,7 @@ export default {
     this.x();
   },
   mounted () {
-    axios
-      .get('http://192.168.11.192:8887/cos/vcode')
-      .then(response => (
-        console.log('response'),
-        this.info = response,
-      console.log('response')))
-      .catch(function (error) { // 请求失败处理
-        console.log(error);
-      });
+    
   }
 };
 </script>

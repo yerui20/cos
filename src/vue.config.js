@@ -7,7 +7,7 @@ module.exports = {
       open: true,
       proxy: {
         '/api': {  //代理别名
-          target: 'http://localhost:8001',   //代理目标值
+          target: 'http://192.168.11.192:8887/cos/',   //代理目标值
           changeOrigin: true,
           secure: true,
           pathRewrite:{  //替换路径中的/api
@@ -24,3 +24,5 @@ module.exports = {
       }
     }
   }
+  
+  
