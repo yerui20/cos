@@ -39,8 +39,10 @@
               </el-col>
               <el-col :span="12">
                 <div class="login-code" @click="refreshCode">
+                  <img :src="info" />
+                  {{info}}
                   <!--验证码组件-->
-                  <Sidentify :identifyCode="identifyCode"></Sidentify>
+                  <!--<Sidentify :identifyCode="identifyCode"></Sidentify> -->
                 </div>
               </el-col>
             </el-row>
@@ -59,7 +61,8 @@
 </template>
 
 <script >
-import { login,vcode} from "@/api/user";
+import { login, vcode } from "@/api/user";
+import axios from 'axios'
 import Sidentify from "@/components/Sidentify.vue";
 export default {
   name: "Login",
@@ -71,7 +74,12 @@ export default {
         password: "",
         vcode: "",
         validtoken: "",
+        yzmcode: "",
       },
+
+       codeSrc: "",
+       info:"",
+
       loginLoading: false,
       identifyCode: "",
       identifyCodes: "123",
@@ -120,6 +128,17 @@ export default {
       }
     },
 
+    cover() {
+      vcode()
+        .then((res) => {
+          this.codeSrc = res;
+        })
+        .catch(function (error) {
+          // 请求失败处理
+          console.log(error);
+        });
+    },
+
     showPassword() {
       this.passwordType === ""
         ? (this.passwordType = "password")
@@ -143,7 +162,7 @@ export default {
     },
     login() {
       this.loginLoading = true;
-      console.log(this.loginForm)
+      console.log(this.loginForm);
       //验证
       login(this.loginForm)
         .then((res) => {
@@ -155,17 +174,28 @@ export default {
           this.loginLoading = false;
         });
     },
-    x(){
-      vcode().then((res)=>{
-        console.log("res")
-        console.log(res)
-        })
-    }
+    x() {
+      vcode().then((res) => {
+        console.log("res");
+        console.log(res);
+      });
+    },
   },
   created() {
     this.refreshCode();
     this.x();
   },
+  mounted () {
+    axios
+      .get('http://192.168.11.192:8887/cos/vcode')
+      .then(response => (
+        console.log('response'),
+        this.info = response,
+      console.log('response')))
+      .catch(function (error) { // 请求失败处理
+        console.log(error);
+      });
+  }
 };
 </script>
 

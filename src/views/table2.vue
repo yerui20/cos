@@ -1,7 +1,7 @@
 <template>
-    <layout>
-        这是第二个表
-    </layout>
+   <div>
+        工单分发列表
+   </div>
 </template>
 
 <script lang="ts">
