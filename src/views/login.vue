@@ -40,9 +40,6 @@
               <el-col :span="12">
                 <div class="login-code" @click="refreshCode">
                   <img  :src="codeSrc" />
-                  <img :src=" 'data:image/png;base64,'+codeSrc ">
-                  <!--验证码组件-->
-                  <!--<Sidentify :identifyCode="identifyCode"></Sidentify> -->
                 </div>
               </el-col>
             </el-row>
@@ -61,8 +58,7 @@
 </template>
 
 <script >
-import { login, vcode } from "@/api/user";
-import axios from 'axios'
+import { login,} from "@/api/user";
 import Sidentify from "@/components/Sidentify.vue";
 export default {
   name: "Login",
@@ -72,14 +68,10 @@ export default {
       loginForm: {
         account: "",
         password: "",
-        vcode: "",
-        validtoken: "",
-        
+        vcode: "",     
       },
-       codeSrc: "",
+      codeSrc: "http://192.168.11.192:8887/cos/vcode",
       loginLoading: false,
-      identifyCode: "",
-      identifyCodes: "123",
       passwordType: "password",
       isDebugLogin: false,
       formRules: {
@@ -99,38 +91,13 @@ export default {
     };
   },
   watch: {
-    isDebugLogin(v) {
-      if (v) {
-        this.loginForm.password = "123";
-        this.refreshCode();
-      }
-    },
-    identifyCode(v) {
-      this.isDebugLogin && (this.loginForm.code = v);
-    },
   },
   methods: {
-    //验证码的函数
-    randomNum(min, max) {
-      return Math.floor(Math.random() * (max - min) + min);
-    },
-    refreshCode() {
-      this.identifyCode = "";
-      this.makeCode(this.identifyCodes, 4);
-    },
-    makeCode(o, l) {
-      for (let i = 0; i < l; i++) {
-        this.identifyCode +=
-          this.identifyCodes[this.randomNum(0, this.identifyCodes.length)];
-      }
-    },
-
     showPassword() {
       this.passwordType === ""
         ? (this.passwordType = "password")
         : (this.passwordType = "");
     },
-
     onLogin() {
       //获取表单数据
       const loginForm = this.loginForm;
@@ -144,7 +111,16 @@ export default {
       this.login();
       //处理后的结果
       //   成功
+      this.$message({
+        message:"登录成功",
+        type:"success"
+      })
+
+      this.$$router.push({
+        name:'Index'
+      })
       //   失败
+
     },
     login() {
       this.loginLoading = true;
@@ -152,7 +128,6 @@ export default {
       //验证
       login(this.loginForm)
         .then((res) => {
-          console.log("res");
           this.loginLoading = false;
         })
         .catch((err) => {
@@ -160,17 +135,9 @@ export default {
           this.loginLoading = false;
         });
     },
-    x() {
-      vcode().then((res) => {
-       this.codeSrc=res.data
-       console.log(res)
-       
-      });
-    },
   },
   created() {
-    this.refreshCode();
-    this.x();
+    
   },
   mounted () {
     
