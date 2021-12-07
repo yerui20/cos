@@ -38,8 +38,8 @@
                 ></el-input>
               </el-col>
               <el-col :span="12">
-                <div class="login-code" @click="refreshCode">
-                  <img  :src="codeSrc" />
+                <div class="login-code">
+                  <img :src="codeSrc" />
                 </div>
               </el-col>
             </el-row>
@@ -58,17 +58,16 @@
 </template>
 
 <script >
-import { login,} from "@/api/user";
-import Sidentify from "@/components/Sidentify.vue";
+import { login } from "@/api/user";
 export default {
   name: "Login",
-  components: { Sidentify },
+  components: {},
   data() {
     return {
       loginForm: {
         account: "",
         password: "",
-        vcode: "",     
+        vcode: "",
       },
       codeSrc: "http://192.168.11.192:8887/cos/vcode",
       loginLoading: false,
@@ -90,8 +89,7 @@ export default {
       },
     };
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     showPassword() {
       this.passwordType === ""
@@ -111,37 +109,38 @@ export default {
       this.login();
       //处理后的结果
       //   成功
-      this.$message({
-        message:"登录成功",
-        type:"success"
-      })
 
-      this.$$router.push({
-        name:'Index'
-      })
       //   失败
-
     },
     login() {
       this.loginLoading = true;
       console.log(this.loginForm);
       //验证
-      login(this.loginForm)
-        .then((res) => {
-          this.loginLoading = false;
-        })
-        .catch((err) => {
-          console.log("登录失败", err);
-          this.loginLoading = false;
-        });
+      login(this.loginForm).then((res) => {
+        this.loginLoading = false;
+        const singe = res.data.meta.success;
+        // if (singe) {
+        //   this.$message({
+        //     message: "登录成功",
+        //     type: "success",
+        //   });
+
+        //   this.$router.push({ name: "Index" });
+        // }else{
+        //   this.$message({
+        //     message: "请输入正确用户名和密码",
+        //     type: "fail",
+        //   });
+        // }
+
+        this.$router.push({ name: "Index" });
+
+        console.log(res);
+      });
     },
   },
-  created() {
-    
-  },
-  mounted () {
-    
-  }
+  created() {},
+  mounted() {},
 };
 </script>
 
