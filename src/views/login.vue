@@ -33,13 +33,13 @@
                   auto-complete="off"
                   size=""
                   placeholder="请输入验证码"
-                  v-model="loginForm.vcode"
+                  v-model="loginForm.code"
                   @keyup.enter.native="submitForm('loginForm')"
                 ></el-input>
               </el-col>
               <el-col :span="12">
-                <div class="login-code">
-                  <img :src="codeSrc" />
+                <div class="login-code" @click="refreshCode">
+                  <Sidentify :identifyCode="identifyCode" />
                 </div>
               </el-col>
             </el-row>
@@ -59,17 +59,30 @@
 
 <script >
 import { login } from "@/api/user";
+import Sidentify from "@/components/Sidentify.vue";
+
 export default {
   name: "Login",
-  components: {},
+  components: { Sidentify },
   data() {
+    const validateCode = (rule, value, callback) => {
+      if (this.identifyCode !== value) {
+        this.loginForm.code = "";
+        this.refreshCode();
+        callback(new Error("请输入正确的验证码"));
+      } else {
+        callback();
+      }
+    };
     return {
       loginForm: {
         account: "",
         password: "",
-        vcode: "",
+        code: "",
       },
-      codeSrc: "http://192.168.11.192:8887/cos/vcode",
+      isDebugLogin: false,
+      identifyCode: "",
+      identifyCodes: "1234567890abcdefghijklmnopqistuvwxyz",
       loginLoading: false,
       passwordType: "password",
       isDebugLogin: false,
@@ -86,11 +99,40 @@ export default {
         password: [
           { required: true, message: "请输入正确密码", trigger: "change" },
         ],
+        code: [
+          { required: true, message: "请输入正确验证码", trigger: "blur" },
+          { validator: validateCode, trigger: "blur" },
+        ],
       },
     };
   },
-  watch: {},
+  watch: {
+    isDebugLogin(v) {
+      if (v) {
+        this.loginForm.password = "123";
+        this.refreshCode();
+      }
+    },
+    identifyCode(v) {
+      this.isDebugLogin && (this.loginForm.code = v);
+    },
+  },
   methods: {
+    //验证码函数
+    randomNum(min, max) {
+      return Math.floor(Math.random() * (max - min) + min);
+    },
+    refreshCode() {
+      this.identifyCode = "";
+      this.makeCode(this.identifyCodes, 4);
+    },
+    makeCode(o, l) {
+      for (let i = 0; i < l; i++) {
+        this.identifyCode +=
+          this.identifyCodes[this.randomNum(0, this.identifyCodes.length)];
+      }
+    },
+    //密码显示
     showPassword() {
       this.passwordType === ""
         ? (this.passwordType = "password")
@@ -114,32 +156,33 @@ export default {
     },
     login() {
       this.loginLoading = true;
+      const logindata = { account: "", password: "" };
+      logindata.account=this.loginForm.account
+       logindata.password=this.loginForm.password
       console.log(this.loginForm);
       //验证
       login(this.loginForm).then((res) => {
         this.loginLoading = false;
         const singe = res.data.meta.success;
-        // if (singe) {
-        //   this.$message({
-        //     message: "登录成功",
-        //     type: "success",
-        //   });
-
-        //   this.$router.push({ name: "Index" });
-        // }else{
-        //   this.$message({
-        //     message: "请输入正确用户名和密码",
-        //     type: "fail",
-        //   });
-        // }
-
-        this.$router.push({ name: "Index" });
-
+        if (singe) {
+          this.$message({
+            message: "登录成功",
+            type: "success",
+          });
+          this.$router.push({ name: "Index" });
+        } else {
+          this.$message({
+            message: res.data.data,
+            type: "fail",
+          });
+        }
         console.log(res);
       });
     },
   },
-  created() {},
+  created() {
+    this.refreshCode();
+  },
   mounted() {},
 };
 </script>

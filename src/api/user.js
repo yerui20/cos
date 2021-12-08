@@ -10,13 +10,13 @@ export const login=date=>{
   })
 }
 //获取用户信息
-export const getUserInfo=()=>{}
-//获取验证码
-export const vcode=()=>{
+export const logout=()=>{
   return request({
-    method: "GET",
-    url: "vcode",
+    method:"POST",
+    url:"CosUser/logout"
   })
 }
+//获取验证码
+
 //修改用户信息
 export const updateUser=()=>{}

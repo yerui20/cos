@@ -1,7 +1,7 @@
 <template>
    <div class='aside-container' style="width:100%"> 
 
-    <h4 class='title'>COS工单查询系统</h4>
+    <h3 class='title'>COS工单查询系统</h3>
     <el-menu
       background-color="#545c64"
       text-color="#fff"
@@ -12,8 +12,14 @@
           <span>工单列表</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="1-1"><router-link to='/table'>内容状态日志</router-link></el-menu-item>
-          <el-menu-item index="1-2"><router-link to='/table2'>工单分发</router-link></el-menu-item>
+          <el-menu-item index="1-1">
+            <i class="el-icon-s-order"></i>
+            <router-link to='/table'>内容状态日志</router-link>
+            </el-menu-item>
+          <el-menu-item index="1-2">
+            <i class="el-icon-s-claim"></i>
+            <router-link to='/table2'>工单分发</router-link>
+            </el-menu-item>
         </el-menu-item-group>              
       </el-submenu>              
     </el-menu>
@@ -30,7 +36,10 @@
           <span>用户管理</span>
         </template>
         <el-menu-item-group> 
-          <el-menu-item index="1-1"><router-link to="/menber">用户列表</router-link></el-menu-item>   
+          <el-menu-item index="1-1">
+            <i class="el-icon-document-copy"></i>    
+            <router-link to="/menber">用户列表</router-link>
+            </el-menu-item>   
         </el-menu-item-group>              
       </el-submenu>              
     </el-menu>
@@ -41,7 +50,10 @@
 <script lang="ts">
 import Vue from 'vue'
 export default  Vue.extend({
-    name:'Aside'
+    name:'Aside',
+    data(){
+      return{}
+    }
 })
 </script>
 

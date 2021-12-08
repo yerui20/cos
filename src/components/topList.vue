@@ -4,7 +4,7 @@
     <div>
     <el-dropdown>
       <div class="el-dropdown-link">
-        <svg-icons name="user" class='user-img'/>
+        <svg-icons :name="user" class='user-img'/>
       </div>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item>個人信息</el-dropdown-item>
@@ -24,6 +24,9 @@ import SvgIcons from "./svgIcons.vue";
 export default Vue.extend({
   components: {SvgIcons  },
   name: "topList",
+  data(){
+   return{user:"user"} 
+  }
 });
 </script>
 

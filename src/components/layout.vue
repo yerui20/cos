@@ -47,7 +47,7 @@
     margin: 10px 10px;
     .topList{
       height: 60px;
-      border: 1px yellow solid;
+      
     }
   }
 }

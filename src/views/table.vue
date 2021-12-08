@@ -1,8 +1,14 @@
 <template>
   <div>
     <div>
-      <el-input class="input1" placeholder="请输入工单号" v-model="search" clearable> </el-input>
-     <el-button icon="el-icon-search" circle></el-button>
+      <el-input
+        class="input1"
+        placeholder="请输入工单号"
+        v-model="search"
+        clearable
+      >
+      </el-input>
+      <el-button icon="el-icon-search" circle></el-button>
     </div>
     <el-table
       :data="
@@ -26,7 +32,6 @@
       <el-table-column label="工单号" prop="correlateid"> </el-table-column>
       <el-table-column label="创建时间" prop="createdate"> </el-table-column>
       <el-table-column label="上级节点" prop="cspid"> </el-table-column>
-      <el-table-column label="主键" prop="id"> </el-table-column>
       <el-table-column label="下级节点" prop="lspid"> </el-table-column>
       <el-table-column width="80" label="优先级" prop="runlevel">
       </el-table-column>
@@ -78,17 +83,18 @@
 <script >
 import Vue from "vue";
 import { getAccepEventList } from "@/api/CosController";
+import axios from 'axios'
 export default Vue.extend({
-  components: {},
+  components: {axios},
   data() {
     return {
       totalPage: 2292,
       total: 114572,
       pageSize: 100,
       currentPage: 1,
-      page: {
-        pageNo: 100,
-        pageSize: 1,
+      data: {
+        pageNo: 1,
+        pageSize: 100,
       },
       tableData: [
         {
@@ -108,6 +114,19 @@ export default Vue.extend({
     };
   },
   methods: {
+    getList() {
+      // let data = JSON.parse(JSON.stringify(this.data));
+      // console.log(data);
+      getAccepEventList(this.data)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log("获取数据失败", err);
+        });
+     
+    },
+
     //重置状态
     handleEdit(index, row, level) {
       console.log(index, row);
@@ -125,15 +144,7 @@ export default Vue.extend({
     },
   },
   created() {
-    const page = this.page;
-    console.log(page);
-    getAccepEventList(page)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log("获取数据失败", err);
-      });
+    this.getList()
   },
 });
 </script>
