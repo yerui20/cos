@@ -3,7 +3,7 @@
     <transition>
       <section class="form_contianer">
         <div class="manage_tip">
-          <p>COS工单查询系统</p>
+          <p>后台系统</p>
         </div>
         <el-form :model="loginForm" :rules="formRules" ref="loginForm">
           <el-form-item prop="account">
@@ -26,6 +26,7 @@
               ></i>
             </el-input>
           </el-form-item>
+
           <el-form-item prop="code">
             <el-row :span="24">
               <el-col :span="12">
@@ -34,7 +35,6 @@
                   size=""
                   placeholder="请输入验证码"
                   v-model="loginForm.code"
-                  @keyup.enter.native="submitForm('loginForm')"
                 ></el-input>
               </el-col>
               <el-col :span="12">
@@ -65,12 +65,14 @@ export default {
   name: "Login",
   components: { Sidentify },
   data() {
-    const validateCode = (rule, value, callback) => {
-      if (this.identifyCode !== value) {
-        this.loginForm.code = "";
-        this.refreshCode();
-        callback(new Error("请输入正确的验证码"));
+    var validateCode = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("验证码不能为空"));
       } else {
+        if (this.identifyCode !== value) {
+          callback(new Error("验证码不正确"));
+         this.refreshCode()
+        }
         callback();
       }
     };
@@ -99,24 +101,11 @@ export default {
         password: [
           { required: true, message: "请输入正确密码", trigger: "change" },
         ],
-        code: [
-          { required: true, message: "请输入正确验证码", trigger: "blur" },
-          { validator: validateCode, trigger: "blur" },
-        ],
+        code: [{ validator: validateCode, trigger: "blur" }],
       },
     };
   },
-  watch: {
-    isDebugLogin(v) {
-      if (v) {
-        this.loginForm.password = "123";
-        this.refreshCode();
-      }
-    },
-    identifyCode(v) {
-      this.isDebugLogin && (this.loginForm.code = v);
-    },
-  },
+  watch: {},
   methods: {
     //验证码函数
     randomNum(min, max) {
@@ -145,10 +134,11 @@ export default {
       this.$refs["loginForm"].validate((valid, err) => {
         if (!valid) {
           return;
+        } else {
+          this.login();
         }
       });
       //通过验证，提交登录
-      this.login();
       //处理后的结果
       //   成功
 
@@ -156,12 +146,14 @@ export default {
     },
     login() {
       this.loginLoading = true;
-      const logindata = { account: "", password: "" };
-      logindata.account=this.loginForm.account
-       logindata.password=this.loginForm.password
-      console.log(this.loginForm);
+      const logindata = {
+        account: this.loginForm.account,
+        password: this.loginForm.password,
+      };
+      console.log(this.logindata);
+      console.log(this.logindata);
       //验证
-      login(this.loginForm).then((res) => {
+      login(logindata).then((res) => {
         this.loginLoading = false;
         const singe = res.data.meta.success;
         if (singe) {
@@ -196,7 +188,7 @@ export default {
 
 .form_contianer {
   @include wh(230px, 320px);
-  @include middle(230px, 320px);
+  @include middle(230, 320);
   padding: 25px;
   border-radius: 5px;
   text-align: center;

@@ -4,7 +4,7 @@ import axios from 'axios'
 //我们通过这个实例去发请求，
 
 const request =axios.create({
-    baseURL:"http://192.168.11.192:8887/cos/"
+    baseURL:"http://192.168.11.3:8887/cos/"
 })
 
 export default request

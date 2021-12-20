@@ -39,7 +39,6 @@
   width: 22%;
   margin: 10px 10px;
   background: #545c64;
-  
   }
   .main{
     border:1px black solid;
