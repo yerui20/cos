@@ -9,15 +9,6 @@ export const login=(date)=>{
     
   })
 }
-//获取用户信息
-export const logout=()=>{
-  return request({
-    method:"POST",
-    url:"CosUser/logout"
-  })
-}
-//修改用户信息
-export const updateUser=()=>{}
 
 //查询用户列表
 export const userList=(data)=>{
