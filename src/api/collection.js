@@ -1,38 +1,16 @@
 import request from '@/utils/request'
-//提交收藏
-export const SubmitCollection=(date)=>{
-    return request({
-        method: "POST",
-        url: "/favorite",
-        date
-      })
 
-     
-}
-
-//取消收藏
-export const CancelCollection=(date)=>{
+//日志查询列表
+export const recordList = (data) => {
     return request({
-        method: "POST",
-        url: "/favorite",
-        date
+        method:'get',
+        url:`Cos/getTaskhandleyirecordList?pageNo=${data.pageNo}&pageSize=${data.pageSize}`
     })
 }
-
-//获取用户收藏
-
-export const getCollection=(date)=>{
+//条件筛选
+export const screen=(data)=>{
     return request({
-        method: "GET",
-        url: "getfavorite?pageNo=1&pageSize=10&accountID=test05@zi",
-        date
-    })
-}
-// 用户是否收藏
-export const isCollection=(date)=>{
-    return request({
-        method: "GET",
-        url: "favorite",
-        date
+        method:'get',
+        url:`Cos/getTaskhandleyirecordByStatusOrSendnod?pageNo=${data.pageNo}&pageSize=${data.pageSize}&sendnode=${data.sendnode}&state=${data.state}`
     })
 }

@@ -22,7 +22,11 @@
             </el-menu-item>
           <el-menu-item index="1-2">
             <i class="el-icon-s-claim"></i>
-            <router-link to='/table2'>工单分发</router-link>
+            <router-link to='/table2'>工单列表</router-link>
+            </el-menu-item>
+            <el-menu-item index="1-3">
+            <i class="el-icon-s-claim"></i>
+            <router-link to='/table3'>工单查询</router-link>
             </el-menu-item>
         </el-menu-item-group>       
       </el-submenu>

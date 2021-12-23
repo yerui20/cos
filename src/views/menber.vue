@@ -202,6 +202,93 @@
       </el-table-column>
     </el-table>
 
+    <!-- 修改 -->
+    <el-dialog
+      title="修改用户"
+      :visible.sync="dialogVisible2"
+      width="30%"
+      top="10px"
+    >
+      <el-form :model="ChangeUser" :rules="ChangeRules" ref="ChangeUser">
+        <el-form-item label="用户名" prop="account">
+          <el-input
+            v-model="ChangeUser.account"
+            autocomplete="off"
+            placeholder="请输入4-10位长度用户名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" prop="name">
+          <el-input
+            v-model="ChangeUser.name"
+            autocomplete="off"
+            placeholder="请输入4-10位长度用户名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="phone">
+          <el-input
+            v-model="ChangeUser.phone"
+            autocomplete="off"
+            placeholder="请输入11位电话号码"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input
+            v-model="ChangeUser.email"
+            autocomplete="off"
+            placeholder="xxx@xxx.com"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="角色" prop="role">
+          <el-input v-model="ChangeUser.role" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-input v-model="ChangeUser.status" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="用户类型" prop="usertype">
+          <el-input v-model="ChangeUser.usertype" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="ChangeForm('ChangeUser')"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+
+    <!-- 删除 -->
+<el-dialog
+      title="删除用户"
+      :visible.sync="dialogVisible3"
+      width="30%"
+      top="10px"
+    >
+      <el-form :model="dUser" >
+        <el-form-item label="您的ID" >
+          <el-input
+            v-model="dUser.zid"
+            autocomplete="off"
+            placeholder="ID不能为空"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="要被删除的ID" >
+          <el-input
+            v-model="dUser.id"
+            autocomplete="off"
+            placeholder="请输入4-10位长度用户名"
+          ></el-input>
+        </el-form-item>
+     
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible3 = false">取 消</el-button>
+        <el-button type="primary" @click="deteleUser('dUser')"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+
+
     <!-- 分页 -->
     <div class="block">
       <el-pagination
@@ -218,28 +305,92 @@
 </template>
 
 <script>
-import { userList } from "@/api/user";
+import { userList, newUser,ChangeUser,deleteUser } from "@/api/user";
 export default {
   name: "menber",
   data() {
     return {
-      newUserRules: {
+      dialogVisible3:false,
+      dUser:{
+        id:null,
+        zid:null
+      },
+      ChangeRules:{
         account: [{ required: true, message: "账号不能为空", trigger: "blur" }],
         name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
-        sex: [{ required: true, message: "请选择活动资源", trigger: "blur" }],
+        sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
         phone: [
           { required: true, message: "电话不能为空", trigger: "blur" },
-          { pattern: /^1[3|5|7|8|9]\d{9}$/, message: "请输入正确手机号", trigger: "blur" },
+          {
+            pattern: /^1[3|5|7|8|9]\d{9}$/,
+            message: "请输入正确手机号",
+            trigger: "blur",
+          },
           {
             min: 11,
             max: 11,
-            message: "请输入6-12位长度的密码",
-            trigger: "change",
+            message: "请输入11位长度的号码",
+            trigger: "blur",
           },
         ],
-        email: [{ required: true, message: "email不能为空", trigger: "blur" },{
-         pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,message: "请输入正确邮箱号", trigger: "blur"
-        }],
+        email: [
+          { required: true, message: "email不能为空", trigger: "blur" },
+          {
+            pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+            message: "请输入正确邮箱号",
+            trigger: "blur",
+          },
+        ],
+       role:[{required: true, message: "角色不能为空", trigger: "blur"}],
+       status:[{required: true, message: "状态不能位空", trigger: "blur" }],
+       usertype:[{required: true, message: "用户类型不能为空", trigger: "blur" }]
+      },
+      ChangeUser: {
+        account: "string",
+        createtime: "string",
+        email: "string",
+        id: 0,
+        lastlogintime: "string",
+        lastupdatepasswordtime: "string",
+        logincount: 0,
+        name: "string",
+        note: "string",
+        password: "string",
+        phone: "string",
+        picture: "string",
+        role: "string",
+        sex: "string",
+        status: "string",
+        updatetime: "string",
+        usertype: "string",
+      },
+      dialogVisible2: false,
+      newUserRules: {
+        account: [{ required: true, message: "账号不能为空", trigger: "blur" }],
+        name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
+        sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
+        phone: [
+          { required: true, message: "电话不能为空", trigger: "blur" },
+          {
+            pattern: /^1[3|5|7|8|9]\d{9}$/,
+            message: "请输入正确手机号",
+            trigger: "blur",
+          },
+          {
+            min: 11,
+            max: 11,
+            message: "请输入11位长度的号码",
+            trigger: "blur",
+          },
+        ],
+        email: [
+          { required: true, message: "email不能为空", trigger: "blur" },
+          {
+            pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+            message: "请输入正确邮箱号",
+            trigger: "blur",
+          },
+        ],
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" },
           {
@@ -302,10 +453,47 @@ export default {
     };
   },
   methods: {
+    deteleUser(){
+      deleteUser(this.dUser).then((res)=>{
+        this.$message({message:'删除成功'})
+        this.dialogVisible3=false
+        }).catch(err=>{
+          this.$message({message:'您没有权限删除用户'})
+          this.dialogVisible3=false
+        })
+    },
+    ChangeForm(){
+      this.$refs['ChangeUser'].validate((valid) => {
+        if (valid) {
+          ChangeUser(this.newForm).then((res) => {
+            this.$message({ message: res.data.meta.message, type: "success" });
+          });
+          this.dialogVisible2 = false;
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    //还原newform的函数
+    clear(x) {
+      (x.account = ""),
+        (x.name = ""),
+        (x.sex = ""),
+        (x.phone = ""),
+        (x.email = ""),
+        (x.note = ""),
+        (x.password = "");
+    },
+
     submitForm(newForm) {
       this.$refs[newForm].validate((valid) => {
         if (valid) {
-          console.log(this.newForm);
+          newUser(this.newForm).then((res) => {
+            this.$message({ message: res.data.meta.message, type: "success" });
+          });
+          this.dialogVisible = false;
+          this.clear(this.newForm);
         } else {
           console.log("error submit!!");
           return false;
@@ -330,10 +518,19 @@ export default {
     },
     //表格行内操作
     handleEdit(index, row) {
-      console.log(index, row);
+      this.dialogVisible2 = true;
+      this.ChangeUser.account=row.account
+      this.ChangeUser.name=row.name
+      this.ChangeUser.phone=row.phone
+      this.ChangeUser.email=row.email
+      this.ChangeUser.role=row.role
+      this.ChangeUser.usertype=row.usertype
+      this.ChangeUser.status=row.status
     },
     handleDelete(index, row) {
-      console.log(index, row);
+      this.dialogVisible3=true
+      this.dUser.id=row.id
+      this.dUser.zid=''
     },
   },
   created() {

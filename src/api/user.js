@@ -17,3 +17,28 @@ return request({
   url:`CosUser/getCosUserList?pageNo=${data.pageNo}&pageSize=${data.pageSize}`
 })
 }
+
+//新增用户
+export const newUser=(data)=>{
+  return request({
+    method:'post',
+    url:'CosUser/postCosUserList',
+    data
+  })
+}
+//修改用户
+export const ChangeUser=(data)=>{
+  return request({
+    method:'post',
+    url:'CosUser/putCosUserList',
+    data
+  })
+}
+//删除用户
+ export const deleteUser=(data)=>{
+  return request({
+    method:'post',
+    url:`CosUser/deleteCosUserList?id=${data.id}&zid=${data.zid}`,
+    data
+  })
+ }

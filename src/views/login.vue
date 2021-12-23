@@ -150,12 +150,11 @@ export default {
         account: this.loginForm.account,
         password: this.loginForm.password,
       };
-      console.log(this.logindata);
-      console.log(this.logindata);
       //验证
       login(logindata).then((res) => {
         this.loginLoading = false;
         const singe = res.data.meta.success;
+        window.localStorage.setItem('account',logindata.account)
         if (singe) {
           this.$message({
             message: "登录成功",
@@ -168,7 +167,6 @@ export default {
             type: "fail",
           });
         }
-        console.log(res);
       });
     },
   },

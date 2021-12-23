@@ -4,15 +4,15 @@ import Index from '../views/index.vue'
 import menber from '../views/menber.vue'
 import Merber from '../views/Newmerber.vue'
 import Login from '../views/login.vue'
-import register from '../views/register.vue'
 import table from '../views/table.vue'
 import table2 from '../views/table2.vue'
+import table3 from '../views/table3.vue'
 
 Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/',
+    path: '/index',
     name: 'Index',
     component: Index,
     children:[
@@ -35,20 +35,21 @@ const routes: Array<RouteConfig> = [
         path: '/table2',
         name: 'table2',
         component: table2
+      },
+      {
+        path: '/table3',
+        name: 'table2',
+        component: table3
       }
     ]
   },
   
   {
-    path: '/login',
+    path: '/',
     name: 'login',
     component: Login
   },
-  {
-    path: '/register',
-    name: 'register',
-    component: register
-  },
+  
 ]
 
 const router = new VueRouter({

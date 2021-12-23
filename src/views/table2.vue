@@ -21,9 +21,8 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           background
-          :current-page="currentPage"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="pageSize"
+          :current-page="listpage.pageNo"
+          :page-size="listpage.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         >
@@ -34,34 +33,36 @@
 </template>
 
 <script>
+import {recordList} from '@/api/collection'
 export default {
   name: "table2",
   data() {
     return {
-      currentPage: 1,
-      pageSize: 100,
+      //筛选的数据
+      
+      //全部时的数据
       total: 1,
       listpage: {
-        pageNo:"",
-        pageSize:"",
+        pageNo: 1,
+        pageSize:100,
       },
       Taskhandleyi: [
         {
-          correlateid: "53047498037169287",
+          correlateid: "530474918193553319",
           errordescription: "",
-          id: 63863471,
+          id: 63863467,
           lowerhairobj: "",
-          lowerhairobjcode: "00000001000000010000000155773652",
-          lowerhairobjname: "分类(小小智慧树)->节目(小小智慧树 20211112HD)",
+          lowerhairobjcode: "00000001000000010000000156195938",
+          lowerhairobjname: "分类(小小智慧树)->节目(小小智慧树 20211115HD)",
           lowerhairobjuniqueid: "",
-          requestcompletedate: "2021-11-29 11:01:47.623",
+          requestcompletedate: "2021-11-29 11:01:41.524",
           requestfile:
-            "ftp://test:test1991@10.137.192.8:21//home/test/workordernew/53047498037169287.xml",
+            "ftp://test:test1991@172.27.160.8:21//home/test/workordernew/53047491819355331.xml",
           responsecompletedate: "",
           responsefile: "",
-          sendnode: "yaxin",
+          sendnode: "zteIPTV",
           state: "0",
-          pcorrelateid: "7260795",
+          upcorrelateid: "7260792",
           upcspid: "CQBK1",
           uplspid: "CQLTCOS",
         },
@@ -69,13 +70,26 @@ export default {
     };
   },
   methods: {
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+    //全部工单列表的数据
+    handleSizeChange(val){
+      this.listpage.pageSize=val
+      this.listInit()    
     },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+    handleCurrentChange(val){
+      this.listpage.pageNo=val
+      this.listInit()
     },
+   listInit(){
+     recordList(this.listpage).then((res)=>{
+       this.Taskhandleyi=res.data.rows
+       this.total=res.data.total
+
+     })
+   }
   },
+  created(){
+    this.listInit()
+  }
 };
 </script>
 
